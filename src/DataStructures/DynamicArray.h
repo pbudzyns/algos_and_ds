@@ -6,11 +6,10 @@
 #include <string>
 #include <utility>
 
-using size_type = uint32_t;
-
 template <typename T>
 class DynamicArray {
  public:
+  using size_type = uint32_t;
   DynamicArray() : DynamicArray(2) {}
 
   explicit DynamicArray(size_type capacity)
@@ -26,7 +25,7 @@ class DynamicArray {
   }
 
   void remove(size_type index) {
-    if (index >= m_Size) throw std::out_of_range("Index out of range.");
+    if (index >= m_Size) throw std::out_of_range("Index out of range!");
 
     --m_Size;
     while (index < m_Size) {
@@ -38,13 +37,23 @@ class DynamicArray {
     }
   }
 
-  const T& operator[](size_type index) const { return m_Data[index]; }
+  T& operator[](size_type index) { return get(index); }
+  const T& operator[](size_type index) const { return get(index); }
 
-  T& get(size_type index) { return m_Data[index]; }
+  T& get(size_type index) {
+    return const_cast<T&>(const_cast<const DynamicArray*>(this)->get(index));
+  }
+  const T& get(size_type index) const {
+    if (index >= m_Size) throw std::out_of_range("Index out of range!");
+
+    return m_Data[index];
+  }
 
   inline size_type size() const { return m_Size; }
 
   inline size_type capacity() const { return m_Capacity; }
+
+  inline bool empty() const { return m_Size == 0; }
 
  private:
   std::unique_ptr<T[]> m_Data;

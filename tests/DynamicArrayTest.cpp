@@ -7,13 +7,36 @@
 
 template <typename T>
 bool compareToVector(const DynamicArray<T>& array, const std::vector<T>& vec) {
-  if (array.size() != static_cast<size_type>(vec.size())) return false;
+  if (array.size() !=
+      static_cast<typename DynamicArray<T>::size_type>(vec.size()))
+    return false;
 
-  for (size_type i{0}; i < array.size(); ++i) {
+  for (typename DynamicArray<T>::size_type i{0}; i < array.size(); ++i) {
     if (array[i] != vec[static_cast<typename std::vector<T>::size_type>(i)])
       return false;
   }
   return true;
+}
+
+TEST(DynamicArrayTest, InitDefault) {
+  DynamicArray<int> array;
+  ASSERT_EQ(array.size(), 0);
+  ASSERT_EQ(array.capacity(), 2);
+}
+
+TEST(DynamicArrayTest, InitParam) {
+  DynamicArray<int> array(10);
+  ASSERT_EQ(array.size(), 0);
+  ASSERT_EQ(array.capacity(), 10);
+}
+
+TEST(DynamicArrayTest, IsEmpty) {
+  DynamicArray<int> array(2);
+  ASSERT_TRUE(array.empty());
+  array.insert(1);
+  ASSERT_FALSE(array.empty());
+  array.remove(0);
+  ASSERT_TRUE(array.empty());
 }
 
 TEST(DynamicArrayTest, GetElement) {
@@ -83,4 +106,50 @@ TEST(DynamicArrayTest, DynamicResizeDown) {
   ASSERT_GE(array.capacity(), n);
   for (int i{0}; i < n / 2 + 1; ++i) array.remove(1);
   ASSERT_EQ(array.capacity(), 512);
+}
+
+TEST(DynamicArrayTest, RemoveIncorrectIndex) {
+  DynamicArray<int> array;
+  array.insert(1);
+  array.insert(2);
+  array.insert(3);
+
+  EXPECT_THROW(
+      {
+        try {
+          array.remove(4);
+        } catch (const std::out_of_range& e) {
+          ASSERT_STREQ("Index out of range!", e.what());
+          throw;
+        }
+      },
+      std::out_of_range);
+}
+
+TEST(DynamicArrayTest, AccessIncorrectIndex) {
+  DynamicArray<int> array;
+  EXPECT_THROW(
+      {
+        try {
+          array.get(2);
+        } catch (const std::out_of_range& e) {
+          ASSERT_STREQ("Index out of range!", e.what());
+          throw;
+        }
+      },
+      std::out_of_range);
+}
+
+TEST(DynamicArrayTest, AccessIncorrectIndexOperator) {
+  DynamicArray<int> array;
+  EXPECT_THROW(
+      {
+        try {
+          array[2];
+        } catch (const std::out_of_range& e) {
+          ASSERT_STREQ("Index out of range!", e.what());
+          throw;
+        }
+      },
+      std::out_of_range);
 }
