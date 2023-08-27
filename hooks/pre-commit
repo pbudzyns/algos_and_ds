@@ -6,7 +6,7 @@
 set -e
 
 echo -e "-- Running clang-format"
-clangformatout=$(git clang-format --style=Google --diff -q)  
+clangformatout=$(git clang-format --style=Google --diff --staged -q)  
   
 if [ "$clangformatout" != "" ]  
 then

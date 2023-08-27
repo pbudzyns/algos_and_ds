@@ -1,9 +1,6 @@
 #include "Sorting.h"
 
-int
-Sort::Min(int
-
-
+int Sort::Min(int
 
                   v1,
               int v2) {
