@@ -18,7 +18,7 @@ fi
 added_files=$(git diff --cached --name-only)
 
 if [ ! -z "$added_files" ]; then
-    source_files=$(echo $added_files | grep -e ".*\.\(cpp\|cxx\|h\|hpp\)" | cat)
+    source_files=$(echo $added_files | tr " " "\n" | grep -e ".*\.\(cpp\|cxx\|h\|hpp\)" | cat)
 fi
 
 if [ ! -z "$source_files" ]
