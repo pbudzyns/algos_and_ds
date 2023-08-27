@@ -73,3 +73,14 @@ TEST(DynamicArrayTest, DynamicResizeUp) {
   std::iota(vec.begin(), vec.end(), 0);
   ASSERT_TRUE(compareToVector(array, vec));
 }
+
+TEST(DynamicArrayTest, DynamicResizeDown) {
+  DynamicArray<int> array;
+  int n{1000};
+  for (int i{0}; i < n; ++i) {
+    array.insert(i);
+  }
+  ASSERT_GE(array.capacity(), n);
+  for (int i{0}; i < n / 2 + 1; ++i) array.remove(1);
+  ASSERT_EQ(array.capacity(), 512);
+}

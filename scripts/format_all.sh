@@ -8,3 +8,5 @@ fi
 if [ ! -z "$test_files" ]; then
     clang-format -i --style=Google $test_files
 fi
+
+clang-format -i --style=Google *.cpp
