@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Sorting.h"
+#include "Algorithms/Sorting.hpp"
 
 int main() {
   std::cout << "Hello world!" << std::endl;

@@ -3,7 +3,7 @@
 #include <numeric>
 #include <vector>
 
-#include "DynamicArray.h"
+#include "DataStructures/DynamicArray.hpp"
 
 template <typename T>
 bool compareToVector(const DynamicArray<T>& array, const std::vector<T>& vec) {
