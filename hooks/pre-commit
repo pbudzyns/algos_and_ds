@@ -1,3 +1,9 @@
 #!/usr/bin/bash
 
-(cd build; ctest --output-on-failure -j6)
+if [ ! -d "build" ] 
+then
+    mkdir build
+    (cd build; cmake ..; make -j4)
+fi
+
+(cd build; ctest --output-on-failure -j4)
