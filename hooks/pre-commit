@@ -5,12 +5,24 @@
 
 set -e
 
-source_files=$(git diff --cached --name-only | grep -e ".*\.\(cpp\|cxx\|h\|hpp\)")
-
-if [ ! -z $source_files ]
+echo -e "-- Running clang-format"
+clangformatout=$(git clang-format --style=Google --diff -q)  
+  
+if [ "$clangformatout" != "" ]  
 then
-    echo -e "-- Running clang-format\n"
-    clang-format -i -Werror --style=Google $source_files
+    echo "Format error!"
+    echo "Use git clang-format"
+    exit 1
+fi
+
+added_files=$(git diff --cached --name-only)
+
+if [ ! -z "$added_files" ]; then
+    source_files=$(echo $added_files | grep -e ".*\.\(cpp\|cxx\|h\|hpp\)" | cat)
+fi
+
+if [ ! -z "$source_files" ]
+then
     echo -e "\n-- Running cpplint\n"
     cpplint $source_files
 fi
