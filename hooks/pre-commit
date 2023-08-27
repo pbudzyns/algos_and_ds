@@ -3,8 +3,10 @@
 # Simple pre commit hook, always runs for all files
 # for more complicated project you would probably like to use pre-commit tool: https://pre-commit.com
 
+set -e
+
 src_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
-test_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+test_files=$(find tests -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
 
 echo -e "-- Running clang-format\n"
 clang-format -i --style=Google $src_files $test_files
