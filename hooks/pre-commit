@@ -5,13 +5,15 @@
 
 set -e
 
-src_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
-test_files=$(find tests -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+source_files=$(git diff --cached --name-only | grep -e ".*\.\(cpp\|cxx\|h\|hpp\)")
 
-echo -e "-- Running clang-format\n"
-clang-format -i --style=Google $src_files $test_files
-echo -e "\n-- Running cpplint\n"
-cpplint $src_files $test_files
+if [ ! -z $source_files ]
+then
+    echo -e "-- Running clang-format\n"
+    clang-format -i -Werror --style=Google $source_files
+    echo -e "\n-- Running cpplint\n"
+    cpplint $source_files
+fi
 
 if [ ! -d "build" ] 
 then
