@@ -1,9 +1,22 @@
 #!/usr/bin/bash
 
+# Simple pre commit hook, always runs for all files
+# for more complicated project you would probably like to use pre-commit tool: https://pre-commit.com
+
+src_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+test_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+
+echo -e "-- Running clang-format\n"
+clang-format -i --style=Google $src_files $test_files
+echo -e "\n-- Running cpplint\n"
+cpplint $src_files $test_files
+
 if [ ! -d "build" ] 
 then
+    echo -e "\n-- Running cmake buildn"
     mkdir build
     (cd build; cmake ..; make -j4)
 fi
 
+echo -e "\n-- Running ctest\n"
 (cd build; ctest --output-on-failure -j4)

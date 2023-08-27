@@ -1,5 +1,6 @@
-class Sort
-{
-public:
-    static int min(int v1, int v2);
+#pragma once
+
+class Sort {
+ public:
+  static int Min(int v1, int v2);
 };
