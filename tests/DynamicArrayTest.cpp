@@ -21,17 +21,10 @@ bool compareToVector(const DynamicArray<T>& array, const std::vector<T>& vec) {
 TEST(DynamicArrayTest, InitDefault) {
   DynamicArray<int> array;
   ASSERT_EQ(array.size(), 0);
-  ASSERT_EQ(array.capacity(), 2);
-}
-
-TEST(DynamicArrayTest, InitParam) {
-  DynamicArray<int> array(10);
-  ASSERT_EQ(array.size(), 0);
-  ASSERT_EQ(array.capacity(), 10);
 }
 
 TEST(DynamicArrayTest, IsEmpty) {
-  DynamicArray<int> array(2);
+  DynamicArray<int> array;
   ASSERT_TRUE(array.empty());
   array.insert(1);
   ASSERT_FALSE(array.empty());
@@ -40,23 +33,27 @@ TEST(DynamicArrayTest, IsEmpty) {
 }
 
 TEST(DynamicArrayTest, GetElement) {
-  DynamicArray<int> array(2);
+  DynamicArray<int> array;
   array.insert(1);
   array.insert(2);
+  array.insert(3);
   ASSERT_EQ(array.get(0), 1);
   ASSERT_EQ(array.get(1), 2);
+  ASSERT_EQ(array.get(2), 3);
 }
 
 TEST(DynamicArrayTest, GetElementOperator) {
-  DynamicArray<int> array(2);
+  DynamicArray<int> array;
   array.insert(1);
   array.insert(2);
+  array.insert(3);
   ASSERT_EQ(array[0], 1);
   ASSERT_EQ(array[1], 2);
+  ASSERT_EQ(array[2], 3);
 }
 
 TEST(DynamicArrayTest, GetSize) {
-  DynamicArray<int> array(2);
+  DynamicArray<int> array;
   ASSERT_EQ(array.size(), 0);
   array.insert(1);
   ASSERT_EQ(array.size(), 1);
@@ -65,7 +62,7 @@ TEST(DynamicArrayTest, GetSize) {
 }
 
 TEST(DynamicArrayTest, RemoveMiddleElement) {
-  DynamicArray<int> array(10);
+  DynamicArray<int> array;
   std::vector<int> vec = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   for (int i{0}; i < 10; ++i) array.insert(i);
   ASSERT_TRUE(compareToVector(array, vec));
@@ -75,7 +72,7 @@ TEST(DynamicArrayTest, RemoveMiddleElement) {
 }
 
 TEST(DynamicArrayTest, RemoveLastElement) {
-  DynamicArray<int> array(10);
+  DynamicArray<int> array;
   std::vector<int> vec = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   for (int i{0}; i < 10; ++i) array.insert(i);
   ASSERT_TRUE(compareToVector(array, vec));
@@ -85,7 +82,7 @@ TEST(DynamicArrayTest, RemoveLastElement) {
 }
 
 TEST(DynamicArrayTest, DynamicResizeUp) {
-  DynamicArray<int> array(2);
+  DynamicArray<int> array;
   ASSERT_EQ(array.capacity(), 2);
   int n{100000};
   for (int i{0}; i < n; ++i) {
