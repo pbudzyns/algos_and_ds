@@ -35,13 +35,14 @@ class BinarySearchTree {
       insert(value);
     }
   };
-  ~BinarySearchTree() = default;
+  ~BinarySearchTree() { deleteTree(); }
 
   void insert(const T& value) {
     m_Root = insert(value, m_Root);
     ++m_Size;
   }
   void remove(const T& value);
+  void rebalance();
 
   std::vector<T> inOrder();
   std::vector<T> preOrder();
@@ -60,7 +61,10 @@ class BinarySearchTree {
   void preOrder(std::vector<T>* values, BinaryTreeNode<T>* node);
   void postOrder(std::vector<T>* values, BinaryTreeNode<T>* node);
 
-  void rebalance();
+  void deleteTree();
+  void deleteNode(BinaryTreeNode<T>* node);
+
+  BinaryTreeNode<T>* fromSortedArray(const T* array, int start, int end);
 };
 
 template <typename T>
@@ -131,4 +135,46 @@ void BinarySearchTree<T>::postOrder(std::vector<T>* values,
   postOrder(values, node->getLeft());
   postOrder(values, node->getRight());
   values->push_back(node->getValue());
+}
+
+template <typename T>
+void BinarySearchTree<T>::rebalance() {
+  if (m_Size == 0) {
+    return;
+  }
+  std::vector<T> sortedValues{inOrder()};
+  BinaryTreeNode<T>* balancedTree{
+      fromSortedArray(sortedValues.data(), 0, sortedValues.size() - 1)};
+
+  deleteTree();
+  m_Root = balancedTree;
+}
+
+template <typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::fromSortedArray(const T* array,
+                                                        int start, int end) {
+  if (start > end) {
+    return nullptr;
+  }
+
+  int mid{(start + end) / 2};
+  BinaryTreeNode<T>* node = new BinaryTreeNode<T>(array[mid]);
+  node->setLeft(fromSortedArray(array, start, mid - 1));
+  node->setRight(fromSortedArray(array, mid + 1, end));
+  return node;
+}
+
+template <typename T>
+void BinarySearchTree<T>::deleteTree() {
+  deleteNode(m_Root);
+}
+
+template <typename T>
+void BinarySearchTree<T>::deleteNode(BinaryTreeNode<T>* node) {
+  if (!node) {
+    return;
+  }
+  deleteNode(node->getLeft());
+  deleteNode(node->getRight());
+  delete node;
 }
