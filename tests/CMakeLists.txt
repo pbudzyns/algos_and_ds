@@ -9,7 +9,11 @@ target_link_libraries(DynamicArrayTest gtest_main DataStructures)
 add_executable(HashMapTest HashMapTest.cpp)
 target_link_libraries(HashMapTest gtest_main DataStructures)
 
+add_executable(BinaryTreeTest BinaryTreeTest.cpp)
+target_link_libraries(BinaryTreeTest gtest_main DataStructures)
+
 include(GoogleTest)
 gtest_discover_tests(SortingTest)
 gtest_discover_tests(DynamicArrayTest)
 gtest_discover_tests(HashMapTest)
+gtest_discover_tests(BinaryTreeTest)
