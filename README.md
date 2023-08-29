@@ -1,17 +1,8 @@
-# Template for CMake project with GoogleTest
+![Unit tests](https://github.com/pbudzyns/algos_and_ds/actions/workflows/cmake-single-platform.yml/badge.svg)
+![Docs](https://github.com/pbudzyns/algos_and_ds/actions/workflows/build-docs.yml/badge.svg)
 
+# C++ Algorithms and Data Structures
 
-## Basic usage
+Implementing various stuff for fun. 
 
-```bash
-$ mkdir build && cd build
-$ cmake ..
-$ make && make test
-```
-
-## Configure git hooks
-To enable pre-commit hook run the configuration script:
-
-```bash
-$ ./configure.sh
-```
+Project includes automated CI pipeline and documentation deployment: https://pbudzyns.github.io/algos_and_ds
