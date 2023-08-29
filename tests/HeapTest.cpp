@@ -102,3 +102,17 @@ TEST(HeapTest, PopEmptyHeap) {
       },
       std::out_of_range);
 }
+
+TEST(HeapTest, CustomCompareFunction) {
+  Heap<int> maxHeap([](int a, int b) { return a > b; });
+  maxHeap.insert(1);
+  ASSERT_EQ(maxHeap.peek(), 1);
+  maxHeap.insert(3);
+  ASSERT_EQ(maxHeap.peek(), 3);
+  maxHeap.insert(2);
+  ASSERT_EQ(maxHeap.peek(), 3);
+  maxHeap.insert(5);
+  ASSERT_EQ(maxHeap.peek(), 5);
+  maxHeap.pop();
+  ASSERT_EQ(maxHeap.peek(), 3);
+}

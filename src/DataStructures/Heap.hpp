@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <utility>
 
@@ -11,6 +12,8 @@ class Heap {
  public:
   typedef typename DynamicArray<T>::size_type size_type;
   Heap() = default;
+  explicit Heap(std::function<bool(const T& a, const T& b)> compare)
+      : m_Cmp{compare} {};
   ~Heap() = default;
 
   T peek();
@@ -24,6 +27,9 @@ class Heap {
 
  private:
   DynamicArray<T> m_Data;
+
+  const std::function<bool(const T& a, const T& b)> m_Cmp{
+      [](const T& a, const T& b) { return a < b; }};
 
   inline size_type getLeftChild(size_type index) const { return 2 * index + 1; }
   inline size_type getRightChild(size_type index) const {
@@ -40,7 +46,7 @@ void Heap<T>::insert(const T& item) {
   m_Data.insert(item);
   size_type idx{m_Data.size() - 1};
 
-  while (idx != 0 && m_Data[idx] < m_Data[getParent(idx)]) {
+  while (idx != 0 && m_Cmp(m_Data[idx], m_Data[getParent(idx)])) {
     swap(&m_Data[idx], &m_Data[getParent(idx)]);
     idx = getParent(idx);
   }
@@ -79,10 +85,12 @@ void Heap<T>::heapify(size_type index) {
   size_type rightChildIdx{getRightChild(index)};
   size_type minNodeIdx{index};
 
-  if (leftChildIdx < size() && m_Data[leftChildIdx] < m_Data[minNodeIdx]) {
+  if (leftChildIdx < size() &&
+      m_Cmp(m_Data[leftChildIdx], m_Data[minNodeIdx])) {
     minNodeIdx = leftChildIdx;
   }
-  if (rightChildIdx < size() && m_Data[rightChildIdx] < m_Data[minNodeIdx]) {
+  if (rightChildIdx < size() &&
+      m_Cmp(m_Data[rightChildIdx], m_Data[minNodeIdx])) {
     minNodeIdx = rightChildIdx;
   }
   if (minNodeIdx != index) {
