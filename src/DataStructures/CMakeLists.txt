@@ -4,6 +4,7 @@ set(
     DynamicArray.hpp 
     HashMap.hpp
     Heap.hpp
+    Stack.hpp
 )
 
 add_library(DataStructures STATIC ${HEADER_FILES})

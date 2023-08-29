@@ -10,12 +10,26 @@ TEST(HeapTest, CreateEmptyHeap) {
 
 TEST(HeapTest, InsertElements) {
   Heap<int> heap;
-  ASSERT_EQ(heap.size(), 0);
-  heap.insert(1);
-  heap.insert(2);
-  heap.insert(3);
-  heap.insert(4);
-  ASSERT_EQ(heap.size(), 4);
+  int n = 1000;
+  for (int i{n}; i > 0; --i) {
+    ASSERT_EQ(heap.size(), n - i);
+    heap.insert(i);
+    ASSERT_EQ(heap.peek(), i);
+  }
+}
+
+TEST(HeapTest, PopElements) {
+  Heap<int> heap;
+  int n = 1000;
+  for (int i{0}; i < n; ++i) {
+    heap.insert(i);
+  }
+  for (int i{0}; i < n; ++i) {
+    ASSERT_EQ(heap.size(), n - i);
+    ASSERT_EQ(heap.peek(), i);
+    heap.pop();
+  }
+  ASSERT_TRUE(heap.empty());
 }
 
 TEST(HeapTest, GetPeek) {
@@ -55,7 +69,7 @@ TEST(HeapTest, PopItem) {
   heap.pop();
   ASSERT_EQ(heap.size(), 1);
   heap.pop();
-  ASSERT_EQ(heap.size(), 0);
+  ASSERT_TRUE(heap.empty());
 }
 
 TEST(HeapTest, PopItemPreservesMinPeek) {
@@ -115,4 +129,10 @@ TEST(HeapTest, CustomCompareFunction) {
   ASSERT_EQ(maxHeap.peek(), 5);
   maxHeap.pop();
   ASSERT_EQ(maxHeap.peek(), 3);
+  maxHeap.pop();
+  ASSERT_EQ(maxHeap.peek(), 2);
+  maxHeap.pop();
+  ASSERT_EQ(maxHeap.peek(), 1);
+  maxHeap.pop();
+  ASSERT_TRUE(maxHeap.empty());
 }

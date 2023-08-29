@@ -5,6 +5,9 @@
 #include "DataStructures/BinaryTree.hpp"
 
 // ------ BinaryTreeNode Tests ---------
+
+using _bst_impl::BinaryTreeNode;
+
 TEST(BinaryTreeNodeTest, CreateNode) {
   BinaryTreeNode<int> node;
   ASSERT_EQ(node.getLeft(), nullptr);

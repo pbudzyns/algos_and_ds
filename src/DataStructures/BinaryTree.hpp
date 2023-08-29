@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+namespace _bst_impl {
 template <typename T>
 class BinaryTreeNode {
  public:
@@ -24,6 +25,9 @@ class BinaryTreeNode {
   BinaryTreeNode* m_Left;
   BinaryTreeNode* m_Right;
 };
+}  // namespace _bst_impl
+
+using _bst_impl::BinaryTreeNode;
 
 template <typename T>
 class BinarySearchTree {
