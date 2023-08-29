@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <functional>
 
-typedef uint32_t size_type;
-
 namespace _hashmap_impl {
 
 template <typename K, typename V>
@@ -13,6 +11,7 @@ class ListNode {
   ListNode(const K& key, const V& value)
       : m_Key{key}, m_Value{value}, m_Next{nullptr} {}
 
+  ~ListNode() = default;
   // Getters
   inline K& getKey() { return m_Key; }
   inline V& getValue() { return m_Value; }
@@ -42,12 +41,12 @@ class LinkedList {
   ListNode<K, V>* m_Root;
 };
 
-template <typename K>
+template <typename K, typename T>
 class HashFunction {
  public:
-  size_type operator()(const K& key, size_type capacity) {
+  T operator()(const K& key, T capacity) {
     auto hash_value{std::hash<K>{}(key)};
-    return static_cast<size_type>(hash_value) % capacity;
+    return static_cast<T>(hash_value) % capacity;
   }
 };
 
@@ -60,13 +59,20 @@ using _hashmap_impl::ListNode;
 template <typename K, typename V>
 class HashMap {
  public:
+  typedef uint32_t size_type;
+
   HashMap()
       : m_Size{0},
         m_TableCapacity{2},
         m_Table{new LinkedList<K, V>*[m_TableCapacity]} {
     initTable();
   }
-  ~HashMap() { delete[] m_Table; }
+  ~HashMap() {
+    for (size_type i{0}; i < m_TableCapacity; ++i) {
+      delete m_Table[i];
+    }
+    delete[] m_Table;
+  }
   void insert(const K& key, const V& value);
   void remove(const K& key);
   V& get(const K& key);
@@ -74,7 +80,7 @@ class HashMap {
 
  private:
   LinkedList<K, V>** m_Table;
-  HashFunction<K> m_HashFn;
+  HashFunction<K, size_type> m_HashFn;
   size_type m_TableCapacity;
   size_type m_Size;
   void initTable();
@@ -151,7 +157,8 @@ void HashMap<K, V>::resizeTable(size_type newTableCapacity) {
 }
 
 template <typename K, typename V>
-inline size_type HashMap<K, V>::getKeyIndex(const K& key) {
+inline typename HashMap<K, V>::size_type HashMap<K, V>::getKeyIndex(
+    const K& key) {
   return m_HashFn(key, m_TableCapacity);
 }
 
