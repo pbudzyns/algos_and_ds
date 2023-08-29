@@ -17,6 +17,7 @@ Testing/
 ## clangd extension VSCodium
 .cache/ 
 .vscode/
+.venv/
 
 # optional
 #.vscode/

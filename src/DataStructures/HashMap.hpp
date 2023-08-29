@@ -77,6 +77,7 @@ class HashMap {
   void remove(const K& key);
   V& get(const K& key);
   bool includes(const K& key);
+  size_type size() const { return m_Size; }
 
  private:
   LinkedList<K, V>** m_Table;
@@ -208,7 +209,6 @@ template <typename K, typename V>
 bool LinkedList<K, V>::removeKey(const K& key) {
   ListNode<K, V>* prev{nullptr};
   ListNode<K, V>* node = m_Root;
-  std::cout << node->getKey() << std::endl;
   while (node && node->getKey() != key) {
     prev = node;
     node = node->getNext();

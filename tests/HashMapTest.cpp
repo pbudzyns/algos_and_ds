@@ -4,7 +4,10 @@
 
 #include "DataStructures/HashMap.hpp"
 
-TEST(HashMapTest, CreateHashMap) { HashMap<std::string, int> map; }
+TEST(HashMapTest, CreateHashMap) {
+  HashMap<std::string, int> map;
+  ASSERT_EQ(map.size(), 0);
+}
 
 TEST(HashMapTest, InsertKeyValue) {
   HashMap<std::string, int> map;
@@ -36,6 +39,19 @@ TEST(HashMapTest, InsertRemoveKeyValues) {
   ASSERT_EQ(map.get("Tomato"), 1);
   ASSERT_EQ(map.get("Onion"), 3);
   EXPECT_THROW(map.get("Potato"), std::out_of_range);
+}
+
+TEST(HashMapTest, InsertManyElements) {
+  HashMap<std::string, int> map;
+  std::string baseKey{"hash map key "};
+  int n{1000};
+  for (int i{0}; i < n; ++i) {
+    map.insert(baseKey + std::to_string(i), i);
+  }
+  ASSERT_EQ(map.size(), n);
+  for (int i{0}; i < n; ++i) {
+    ASSERT_EQ(map.get(baseKey + std::to_string(i)), i);
+  }
 }
 
 TEST(HashMapTest, GetKeyError) {
