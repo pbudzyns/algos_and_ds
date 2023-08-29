@@ -4,17 +4,8 @@ Data Structures
 .. toctree::
    :maxdepth: 1
 
+   datastructures/binarytree
    datastructures/dynamicarray
-
-
-.. doxygenclass:: HashMap
-    :members:
-
-.. doxygenclass:: BinarySearchTree
-    :members:
-
-.. doxygenclass:: Heap
-    :members:
-
-.. doxygenclass:: Stack
-    :members:
+   datastructures/hashmap
+   datastructures/heap
+   datastructures/stack

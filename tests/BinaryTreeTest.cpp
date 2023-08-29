@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <random>
 #include <vector>
 
 #include "DataStructures/BinaryTree.hpp"
@@ -57,6 +59,21 @@ TEST(BinarySearchTreeTest, InsertValues) {
   ASSERT_EQ(tree.getRoot()->getLeft()->getValue(), 2);
   ASSERT_EQ(tree.getRoot()->getRight()->getValue(), 6);
   ASSERT_EQ(tree.getRoot()->getLeft()->getLeft()->getValue(), 1);
+}
+
+TEST(BinarySearchTreeTest, InsertIncludes) {
+  BinarySearchTree<int> tree;
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::vector<int> numbers(1000);
+  std::iota(numbers.begin(), numbers.end(), -500);
+  std::shuffle(numbers.begin(), numbers.end(), g);
+  for (int n : numbers) {
+    tree.insert(n);
+  }
+  for (int i{-500}; i < 500; ++i) {
+    ASSERT_TRUE(tree.contains(i));
+  }
 }
 
 TEST(BinarySearchTreeTest, CreateWithVector) {

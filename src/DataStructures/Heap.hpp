@@ -7,22 +7,104 @@
 
 #include "DataStructures/DynamicArray.hpp"
 
+/**
+ * @brief Template for heap container.
+ *
+ * @details Heap implementation using DynamicArray as an underlying container.
+ * Heap is a complete binary tree that allows to retrieve minimum (MinHeap) or
+ * maximum (MaxHeap) in constant time `O(1)`. Inserting and deleting elements
+ * from Heap take `O(log n)` time.
+ *
+ * Types stored in the Heap should implement compare operators (at least `<` for
+ * default implementation).
+ *
+ * By default this template creates MinHeap. To create MaxHeap provide proper
+ * comparison function to the constructor.
+ *
+ * Example usage:
+ * @code
+ * Heap<int> heap;
+ * heap.insert(2);
+ * heap.peek(); // == 2
+ * heap.insert(1);
+ * heap.peek(); // == 1
+ * @endcode
+ *
+ * @code
+ * // Use custom comparator to create MaxHeap.
+ * Heap<int> maxHeap([](int a, int b) { return a > b; });
+ * maxHeap.insert(1);
+ * maxHeap.peek(); // == 1
+ * maxHeap.insert(2);
+ * maxHeap.peek(); // == 2
+ * @endcode
+ *
+ * @tparam T Type of the stored values.
+ */
 template <typename T>
 class Heap {
  public:
+  /**
+   * @brief Type used for indexing and size definition.
+   *
+   */
   typedef typename DynamicArray<T>::size_type size_type;
+
+  /**
+   * @brief Construct a new Heap object.
+   *
+   */
   Heap() = default;
+
+  /**
+   * @brief Construct a new Heap object with custom compare function.
+   *
+   * @details Can be used to create max heap or custom implementations.
+   *
+   * @param compare Compare function.
+   */
   explicit Heap(std::function<bool(const T& a, const T& b)> compare)
       : m_Cmp{compare} {};
+
+  /**
+   * @brief Destroy the Heap object.
+   *
+   */
   ~Heap() = default;
 
-  T peek();
+  /**
+   * @brief Access item on the top of the Heap.
+   *
+   * @return `T&` Referece to the item on the top.
+   */
+  T& peek();
 
+  /**
+   * @brief Removes top item from the Heap (minimum by default).
+   *
+   */
   void pop();
+
+  /**
+   * @brief Insert and item to the Heap.
+   *
+   * @param item Item to be inserted.
+   */
   void insert(const T& item);
 
+  /**
+   * @brief Check if the Heap is empty.
+   *
+   * @return `true` If the heap is empty.
+   * @return `false` If heap contains any items.
+   */
   inline bool empty() const { return m_Data.empty(); }
 
+  /**
+   * @brief Get size of the Heap.
+   *
+   * @return `size_type` Number of items in the heap.
+   */
   size_type size() const { return m_Data.size(); }
 
  private:
@@ -31,11 +113,9 @@ class Heap {
   const std::function<bool(const T& a, const T& b)> m_Cmp{
       [](const T& a, const T& b) { return a < b; }};
 
-  inline size_type getLeftChild(size_type index) const { return 2 * index + 1; }
-  inline size_type getRightChild(size_type index) const {
-    return 2 * index + 2;
-  }
-  inline size_type getParent(size_type index) const { return (index - 1) / 2; }
+  size_type getLeftChild(size_type index) const { return 2 * index + 1; }
+  size_type getRightChild(size_type index) const { return 2 * index + 2; }
+  size_type getParent(size_type index) const { return (index - 1) / 2; }
 
   void swap(T* first, T* second);
   void heapify(size_type index);
@@ -65,7 +145,7 @@ void Heap<T>::pop() {
 }
 
 template <typename T>
-T Heap<T>::peek() {
+T& Heap<T>::peek() {
   if (empty()) {
     throw std::out_of_range("Heap is empty!");
   }

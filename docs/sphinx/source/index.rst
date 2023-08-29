@@ -10,7 +10,6 @@ Welcome to Algorithms and Data Structures's documentation!
    :maxdepth: 1
    :caption: Contents:
 
-   algorithms
    datastructures
 
 
