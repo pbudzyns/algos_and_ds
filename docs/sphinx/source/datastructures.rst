@@ -8,4 +8,5 @@ Data Structures
    datastructures/dynamicarray
    datastructures/hashmap
    datastructures/heap
+   datastructures/prefixtree
    datastructures/stack
