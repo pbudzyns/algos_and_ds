@@ -1,4 +1,7 @@
 Algorithms
 ==========
 
-.. doxygenclass:: Sort
+.. toctree::
+   :maxdepth: 1
+
+   algorithms/sorting
