@@ -35,6 +35,14 @@ void mergeSort(int* numbers, int n);
 void quickSort(int* numbers, int n);
 
 /**
+ * @brief Heap sort algorithm for an array of integers.
+ *
+ * @param numbers Pointer to array of integers.
+ * @param n Number of elements in the array.
+ */
+void heapSort(int* numbers, int n);
+
+/**
  * @brief Helper function to swap two elements.
  *
  * @param first Pointer to first element.

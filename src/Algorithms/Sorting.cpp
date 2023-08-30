@@ -6,6 +6,8 @@ void sort::swapElements(int* first, int* second) {
   *second = tmp;
 }
 
+// ------- Bubble Sort -----------------------------
+
 void sort::bubbleSort(int* numbers, int n) {
   for (int i{0}; i < n - 1; ++i) {
     for (int j{i + 1}; j < n; ++j) {
@@ -16,6 +18,8 @@ void sort::bubbleSort(int* numbers, int n) {
     }
   }
 }
+
+// ------- Selection Sort -----------------------------
 
 void sort::selectionSort(int* numbers, int n) {
   int smallest_idx;
@@ -33,6 +37,8 @@ void sort::selectionSort(int* numbers, int n) {
     }
   }
 }
+
+// ------- Merge Sort -----------------------------
 
 static void mergeSort(int* numbers, int* helper, int low, int high);
 static void merge(int* numbers, int* helper, int low, int middle, int high);
@@ -83,8 +89,10 @@ static void merge(int* numbers, int* helper, int low, int middle, int high) {
   }
 }
 
-void quickSort(int* numbers, int start, int end);
-int partition(int* numbers, int start, int end);
+// ------- Quick Sort -----------------------------
+
+static void quickSort(int* numbers, int start, int end);
+static int partition(int* numbers, int start, int end);
 
 void sort::quickSort(int* numbers, int n) { ::quickSort(numbers, 0, n - 1); }
 
@@ -111,4 +119,39 @@ int partition(int* numbers, int start, int end) {
   sort::swapElements(&numbers[i], &numbers[end]);
 
   return i;
+}
+
+// ------- Heap Sort -----------------------------
+
+static void heapify(int* numbers, int n, int i);
+
+void sort::heapSort(int* numbers, int n) {
+  for (int i{n / 2 - 1}; i >= 0; --i) {
+    // Heapify subtrees starting from root of the "last" element.
+    heapify(numbers, n, i);
+  }
+
+  for (int i{n - 1}; i >= 0; --i) {
+    // Max heap the largest element is the root.
+    sort::swapElements(&numbers[0], &numbers[i]);
+    // Heapify reduced range of the array.
+    heapify(numbers, i, 0);
+  }
+}
+
+static void heapify(int* numbers, int n, int i) {
+  int largest{i};
+  int leftChild{2 * i + 1};
+  int rightChild{2 * i + 2};
+
+  if (leftChild < n && numbers[leftChild] > numbers[largest]) {
+    largest = leftChild;
+  }
+  if (rightChild < n && numbers[rightChild] > numbers[largest]) {
+    largest = rightChild;
+  }
+  if (largest != i) {
+    sort::swapElements(&numbers[largest], &numbers[i]);
+    heapify(numbers, n, largest);
+  }
 }

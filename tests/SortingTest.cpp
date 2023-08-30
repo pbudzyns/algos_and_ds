@@ -65,3 +65,15 @@ TEST(SortingTest, TestQuickSort) {
     ASSERT_EQ(numbers[i], i + start);
   }
 }
+
+TEST(SortingTest, HeapSort) {
+  int start{MIN_VAL};
+  int n{N_VAL};
+  std::vector<int> numbers{getRandomOrderedNumbers(start, n)};
+
+  sort::heapSort(numbers.data(), n);
+
+  for (int i{0}; i < n; ++i) {
+    ASSERT_EQ(numbers[i], i + start);
+  }
+}
