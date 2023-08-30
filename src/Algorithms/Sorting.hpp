@@ -21,10 +21,18 @@ void selectionSort(int* numbers, int n);
 /**
  * @brief Merge sort algorithm for an array of integers.
  *
- * @param numbers Pointer to array on integers.
+ * @param numbers Pointer to array of integers.
  * @param n Number of elements in the array.
  */
 void mergeSort(int* numbers, int n);
+
+/**
+ * @brief Quick sort algorithm for an array of integers.
+ *
+ * @param numbers Pointer to array of integers.
+ * @param n Number of elements in the array.
+ */
+void quickSort(int* numbers, int n);
 
 /**
  * @brief Helper function to swap two elements.

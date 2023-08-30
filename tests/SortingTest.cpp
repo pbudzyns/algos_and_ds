@@ -6,6 +6,9 @@
 
 #include "Algorithms/Sorting.hpp"
 
+const int MIN_VAL{-5000};
+const int N_VAL{10000};
+
 std::vector<int> getRandomOrderedNumbers(int start, int n) {
   static std::random_device rd;
   static std::mt19937 g(rd());
@@ -16,8 +19,8 @@ std::vector<int> getRandomOrderedNumbers(int start, int n) {
 }
 
 TEST(SortingTest, TestBubbleSort) {
-  int start{-500};
-  int n{1000};
+  int start{MIN_VAL};
+  int n{N_VAL};
   std::vector<int> numbers{getRandomOrderedNumbers(start, n)};
 
   sort::bubbleSort(numbers.data(), n);
@@ -28,8 +31,8 @@ TEST(SortingTest, TestBubbleSort) {
 }
 
 TEST(SortingTest, TestSelectionSort) {
-  int start{-500};
-  int n{1000};
+  int start{MIN_VAL};
+  int n{N_VAL};
   std::vector<int> numbers{getRandomOrderedNumbers(start, n)};
 
   sort::selectionSort(numbers.data(), n);
@@ -40,11 +43,23 @@ TEST(SortingTest, TestSelectionSort) {
 }
 
 TEST(SortingTest, TestMergeSort) {
-  int start{0};
-  int n{10};
+  int start{MIN_VAL};
+  int n{N_VAL};
   std::vector<int> numbers{getRandomOrderedNumbers(start, n)};
 
   sort::mergeSort(numbers.data(), n);
+
+  for (int i{0}; i < n; ++i) {
+    ASSERT_EQ(numbers[i], i + start);
+  }
+}
+
+TEST(SortingTest, TestQuickSort) {
+  int start{MIN_VAL};
+  int n{N_VAL};
+  std::vector<int> numbers{getRandomOrderedNumbers(start, n)};
+
+  sort::quickSort(numbers.data(), n);
 
   for (int i{0}; i < n; ++i) {
     ASSERT_EQ(numbers[i], i + start);

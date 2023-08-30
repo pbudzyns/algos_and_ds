@@ -82,3 +82,33 @@ static void merge(int* numbers, int* helper, int low, int middle, int high) {
     numbers[current++] = helper[left++];
   }
 }
+
+void quickSort(int* numbers, int start, int end);
+int partition(int* numbers, int start, int end);
+
+void sort::quickSort(int* numbers, int n) { ::quickSort(numbers, 0, n - 1); }
+
+void quickSort(int* numbers, int start, int end) {
+  if (start >= end) {
+    return;
+  }
+  int pivotIdx{partition(numbers, start, end)};
+  quickSort(numbers, start, pivotIdx - 1);
+  quickSort(numbers, pivotIdx + 1, end);
+}
+
+int partition(int* numbers, int start, int end) {
+  int pivot{numbers[end]};
+  int i{start - 1}, j{start};
+  while (j <= end) {
+    if (numbers[j] < pivot) {
+      i++;
+      sort::swapElements(&numbers[i], &numbers[j]);
+    }
+    j++;
+  }
+  i++;
+  sort::swapElements(&numbers[i], &numbers[end]);
+
+  return i;
+}
