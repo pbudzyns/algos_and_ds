@@ -1,6 +1,7 @@
 #pragma once
 
-namespace sort {
+namespace sort
+{
 
 /**
  * @brief Bubble sort algorithm for an array of integers.
@@ -49,4 +50,4 @@ void heapSort(int* numbers, int n);
  * @param second Pointer to second element.
  */
 void swapElements(int* first, int* second);
-}  // namespace sort
+} // namespace sort

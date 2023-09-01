@@ -1,5 +1,6 @@
 
-style="Google"
+style="file"
+
 source_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
 test_files=$(find tests -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
 

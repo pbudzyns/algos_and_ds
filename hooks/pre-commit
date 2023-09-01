@@ -6,7 +6,7 @@
 set -e
 
 echo -e "-- Running clang-format"
-clangformatout=$(git clang-format --style=Google --diff --staged -q)  
+clangformatout=$(git clang-format --style=file --diff --staged -q)  
   
 if [ "$clangformatout" != "" ]  
 then
@@ -21,18 +21,18 @@ if [ ! -z "$added_files" ]; then
     source_files=$(echo $added_files | tr " " "\n" | grep -e ".*\.\(cpp\|cxx\|h\|hpp\)" | cat)
 fi
 
-if [ ! -z "$source_files" ]
-then
-    echo -e "\n-- Running cpplint\n"
-    cpplint $source_files
-fi
-
 if [ ! -d "build" ] 
 then
-    echo -e "\n-- Running cmake buildn"
+    echo -e "\n-- Running cmake"
     mkdir build
-    (cd build; cmake ..; make -j4)
+    (cd build; cmake ..)
 fi
 
-echo -e "\n-- Running ctest\n"
-(cd build; ctest --output-on-failure -j4)
+if [ ! -z "$source_files" ]
+then
+    echo -e "\n-- Running clang-tidy\n"
+    clang-tidy -p build/ -header-filter=. $source_files
+fi
+
+echo -e "\n-- Running make && ctest\n"
+(cd build; make -j4; ctest --output-on-failure -j4)
