@@ -2,6 +2,7 @@
 
 void sort::swapElements(int* first, int* second)
 {
+
     int tmp = *first;
     *first = *second;
     *second = tmp;
