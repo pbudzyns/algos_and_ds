@@ -35,4 +35,7 @@ jobs:
         clang-format --Werror --dry-run --style=file $source_files $test_files
 
     - name: Clang Tidy
-      run: clang-tidy -p build/ -header-filter=.* $source_files $test_files
+      run: |
+      source_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+      test_files=$(find tests -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+      clang-tidy -p build/ -header-filter=.* $source_files $test_files
