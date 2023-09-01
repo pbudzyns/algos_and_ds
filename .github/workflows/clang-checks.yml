@@ -36,6 +36,6 @@ jobs:
 
     - name: Clang Tidy
       run: |
-      source_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
-      test_files=$(find tests -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
-      clang-tidy -p build/ -header-filter=.* $source_files $test_files
+        source_files=$(find src -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+        test_files=$(find tests -type f -regex ".*\.\(cpp\|cxx\|h\|hpp\)")
+        clang-tidy -p build/ -header-filter=.* $source_files $test_files
