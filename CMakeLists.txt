@@ -26,17 +26,13 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(App App.cpp)
 
-# alternative cmake -DCMAKE_BUILD_TYPE=Debug <path and other arguments>
-#set(CMAKE_BUILD_TYPE Debug)
-
-# Specify dependecies
 target_link_libraries(App PUBLIC Algorithms)
 
-target_include_directories(App PUBLIC
-                           "${PROJECT_BINARY_DIR}"
-                           )
-
-
+target_include_directories(
+  App 
+  PUBLIC
+  "${PROJECT_BINARY_DIR}"
+)
 
 enable_testing()
 

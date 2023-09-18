@@ -287,9 +287,9 @@ void DynamicArray<T>::resize(size_type newCapacity)
 {
     std::unique_ptr<T[]> newData = std::make_unique<T[]>(newCapacity);
 
-    auto* p_data{m_Data.get()};
-    std::copy(p_data, p_data + m_Size, newData.get());
+    std::copy(begin(), end(), newData.get());
 
+    // Assigning to unique_ptr should free it's previous resource
     m_Data = std::move(newData);
     m_Capacity = newCapacity;
 }

@@ -8,7 +8,7 @@
 
 // ------ BinaryTreeNode Tests ---------
 
-using _bst_impl::BinaryTreeNode;
+using bst_impl::BinaryTreeNode;
 
 TEST(BinaryTreeNodeTest, CreateNode)
 {

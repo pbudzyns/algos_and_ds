@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace _bst_impl
+namespace bst_impl
 {
 
 /**
@@ -116,7 +116,7 @@ class BinaryTreeNode
     BinaryTreeNode* m_Left;
     BinaryTreeNode* m_Right;
 };
-} // namespace _bst_impl
+} // namespace bst_impl
 
 /**
  * @brief Template for binary search tree container.
@@ -260,37 +260,37 @@ class BinarySearchTree
     /**
      * @brief Get the root node.
      *
-     * @return `const _bst_impl::BinaryTreeNode<T>*` Const pointer to the root
+     * @return `const bst_impl::BinaryTreeNode<T>*` Const pointer to the root
      * node.
      */
-    const _bst_impl::BinaryTreeNode<T>* getRoot() const
+    const bst_impl::BinaryTreeNode<T>* getRoot() const
     {
         return m_Root;
     }
 
   private:
     size_type m_Size;
-    _bst_impl::BinaryTreeNode<T>* m_Root;
+    bst_impl::BinaryTreeNode<T>* m_Root;
 
-    _bst_impl::BinaryTreeNode<T>* insert(const T& value,
-                                         _bst_impl::BinaryTreeNode<T>* node);
+    bst_impl::BinaryTreeNode<T>* insert(const T& value,
+                                        bst_impl::BinaryTreeNode<T>* node);
 
-    bool contains(const T& value, _bst_impl::BinaryTreeNode<T>* node) const;
+    bool contains(const T& value, bst_impl::BinaryTreeNode<T>* node) const;
 
-    void inOrder(std::vector<T>* values, _bst_impl::BinaryTreeNode<T>* node);
-    void preOrder(std::vector<T>* values, _bst_impl::BinaryTreeNode<T>* node);
-    void postOrder(std::vector<T>* values, _bst_impl::BinaryTreeNode<T>* node);
+    void inOrder(std::vector<T>* values, bst_impl::BinaryTreeNode<T>* node);
+    void preOrder(std::vector<T>* values, bst_impl::BinaryTreeNode<T>* node);
+    void postOrder(std::vector<T>* values, bst_impl::BinaryTreeNode<T>* node);
 
     void deleteTree();
-    void deleteNode(_bst_impl::BinaryTreeNode<T>* node);
+    void deleteNode(bst_impl::BinaryTreeNode<T>* node);
 
-    _bst_impl::BinaryTreeNode<T>* fromSortedArray(const T* array, int start,
-                                                  int end);
+    bst_impl::BinaryTreeNode<T>* fromSortedArray(const T* array, int start,
+                                                 int end);
 };
 
 // ------ Binary Search Tree Implementation -------
 
-using _bst_impl::BinaryTreeNode;
+using bst_impl::BinaryTreeNode;
 
 template <typename T>
 BinaryTreeNode<T>* BinarySearchTree<T>::insert(const T& value,
