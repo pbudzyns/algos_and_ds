@@ -26,6 +26,82 @@ TEST(DynamicArrayTest, InitDefault)
     ASSERT_EQ(array.size(), 0);
 }
 
+TEST(DynamicArrayTest, InitList)
+{
+    DynamicArray<int> array{1, 2, 3, 4, 5};
+    ASSERT_EQ(array.size(), 5);
+    for (int i{0}; i < 5; i++)
+    {
+        ASSERT_EQ(array[i], i + 1);
+    }
+}
+
+TEST(DynamicArrayTest, EqualOperator)
+{
+    DynamicArray<int> array1{1, 2, 3, 4, 5};
+    DynamicArray<int> array2{1, 2, 3, 4, 5};
+    DynamicArray<int> array3{1, 2, 8, 4, 5};
+    DynamicArray<int> array4{1, 2, 3, 4};
+
+    ASSERT_TRUE(array1 == array2);
+    ASSERT_FALSE(array1 == array3);
+    ASSERT_FALSE(array1 == array4);
+}
+
+TEST(DynamicArrayTest, NotEqualOperator)
+{
+    DynamicArray<int> array1{1, 2, 3, 4, 5};
+    DynamicArray<int> array2{1, 2, 3, 4, 5};
+    DynamicArray<int> array3{1, 2, 8, 4, 5};
+    DynamicArray<int> array4{1, 2, 3, 4};
+
+    ASSERT_FALSE(array1 != array2);
+    ASSERT_TRUE(array1 != array3);
+    ASSERT_TRUE(array1 != array4);
+}
+
+TEST(DynamicArrayTest, CopyConstructor)
+{
+    DynamicArray<int> array{1, 2, 3, 4, 5};
+    DynamicArray<int> other{array};
+
+    ASSERT_TRUE(array == other);
+}
+
+TEST(DynamicArrayTest, CopyOperator)
+{
+    DynamicArray<int> array{1, 2, 3, 4, 5};
+    DynamicArray<int> other = array;
+
+    ASSERT_TRUE(array == other);
+}
+
+TEST(DynamicArrayTest, MoveConstructor)
+{
+    DynamicArray<int> array{1, 2, 3, 4, 5};
+    DynamicArray<int> other{std::move(array)};
+
+    ASSERT_TRUE(array.empty());
+    ASSERT_EQ(other.size(), 5);
+    for (int i{0}; i < 5; i++)
+    {
+        ASSERT_EQ(other[i], i + 1);
+    }
+}
+
+TEST(DynamicArrayTest, MoveOperator)
+{
+    DynamicArray<int> array{1, 2, 3, 4, 5};
+    DynamicArray<int> other = std::move(array);
+
+    ASSERT_TRUE(array.empty());
+    ASSERT_EQ(other.size(), 5);
+    for (int i{0}; i < 5; i++)
+    {
+        ASSERT_EQ(other[i], i + 1);
+    }
+}
+
 TEST(DynamicArrayTest, IsEmpty)
 {
     DynamicArray<int> array;
@@ -56,6 +132,26 @@ TEST(DynamicArrayTest, GetElementOperator)
     ASSERT_EQ(array[0], 1);
     ASSERT_EQ(array[1], 2);
     ASSERT_EQ(array[2], 3);
+}
+
+TEST(DynamicArrayTest, RangeLoop)
+{
+    DynamicArray<int> array{1, 2, 3};
+    int i{1};
+    for (int x : array)
+    {
+        ASSERT_EQ(x, i++);
+    }
+}
+
+TEST(DynamicArrayTest, ConstRangeLoop)
+{
+    const DynamicArray<int> array{1, 2, 3};
+    int i{1};
+    for (int x : array)
+    {
+        ASSERT_EQ(x, i++);
+    }
 }
 
 TEST(DynamicArrayTest, GetSize)

@@ -4,16 +4,16 @@
 #include <functional>
 #include <stdexcept>
 
-namespace _hashmap_impl
+namespace hashmap_impl
 {
 
 /**
  * @brief Linked list node template.
  *
- * @tparam K Type of keys.
- * @tparam V Type of values.
+ * @tparam Key Type of keys.
+ * @tparam Value Type of values.
  */
-template <typename K, typename V>
+template <typename Key, typename Value>
 class ListNode
 {
   public:
@@ -23,7 +23,7 @@ class ListNode
      * @param key Key to store.
      * @param value Value to store.
      */
-    ListNode(const K& key, const V& value)
+    ListNode(const Key& key, const Value& value)
         : m_Key{key}, m_Value{value}, m_Next{nullptr}
     {
     }
@@ -39,7 +39,7 @@ class ListNode
      *
      * @return `K&` Reference to the key.
      */
-    K& getKey()
+    Key& getKey()
     {
         return m_Key;
     }
@@ -49,7 +49,7 @@ class ListNode
      *
      * @return `V&` Reference to the value.
      */
-    V& getValue()
+    Value& getValue()
     {
         return m_Value;
     }
@@ -59,7 +59,7 @@ class ListNode
      *
      * @return `ListNode<K, V>*` Pointer to the next node.
      */
-    ListNode<K, V>* getNext()
+    ListNode<Key, Value>* getNext()
     {
         return m_Next;
     }
@@ -69,7 +69,7 @@ class ListNode
      *
      * @param value Value to set.
      */
-    void setValue(const V& value)
+    void setValue(const Value& value)
     {
         m_Value = value;
     }
@@ -79,24 +79,24 @@ class ListNode
      *
      * @param next Pointer to next node.
      */
-    void setNext(ListNode<K, V>* next)
+    void setNext(ListNode<Key, Value>* next)
     {
         m_Next = next;
     }
 
   private:
-    ListNode<K, V>* m_Next;
-    K m_Key;
-    V m_Value;
+    ListNode<Key, Value>* m_Next;
+    Key m_Key;
+    Value m_Value;
 };
 
 /**
  * @brief Linked list template.
  *
- * @tparam K Type of keys.
- * @tparam V Type of values.
+ * @tparam Key Type of keys.
+ * @tparam Value Type of values.
  */
-template <typename K, typename V>
+template <typename Key, typename Value>
 class LinkedList
 {
   public:
@@ -121,7 +121,7 @@ class LinkedList
      * @param key Key to store.
      * @param value Value to store.
      */
-    void insertKeyValue(const K& key, const V& value);
+    void insertKeyValue(const Key& key, const Value& value);
 
     /**
      * @brief Remove key from the LinkedList.
@@ -133,7 +133,7 @@ class LinkedList
      * @return `true` If node for the key was found and removed.
      * @return `false` If node for the key was not found.
      */
-    bool removeKey(const K& key);
+    bool removeKey(const Key& key);
 
     /**
      * @brief Find ListNode for the key in the LinkedList.
@@ -142,7 +142,7 @@ class LinkedList
      * @return `ListNode<K, V>*` Pointer to the node containing the key.
      * `nullptr` if key was not found.
      */
-    ListNode<K, V>* find(const K& key);
+    ListNode<Key, Value>* find(const Key& key);
 
     /**
      * @brief Get the pointer to root node.
@@ -150,46 +150,46 @@ class LinkedList
      * @return `ListNode<K, V>*` Pointer to the root node.
      * `nullptr` if list is empty.
      */
-    ListNode<K, V>* getRoot()
+    ListNode<Key, Value>* getRoot()
     {
         return m_Root;
     }
 
   private:
-    ListNode<K, V>* m_Root;
+    ListNode<Key, Value>* m_Root;
 };
 
 /**
  * @brief Hashing function object template.
  *
- * @tparam K Type of keys.
- * @tparam T Type of hash value.
+ * @tparam Key Type of keys.
+ * @tparam SizeType Type of hash value.
  */
-template <typename K, typename T>
+template <typename Key, typename SizeType>
 class HashFunction
 {
   public:
     /**
      * @brief Get hash index for the key.
      *
-     * @details Returns value from `[0-capacity)` range of type `T`.
+     * @details Returns value from `[0-capacity)` range of type `SizeType`.
      *
      * @param key Key to hash.
      * @param capacity Capacity of the container.
-     * @return `T` Index of type T.
+     * @return `SizeType` Index of type SizeType.
      */
-    T operator()(const K& key, T capacity) const
+    SizeType operator()(const Key& key, SizeType capacity) const
     {
-        auto hash_value{std::hash<K>{}(key)};
-        return static_cast<T>(hash_value) % capacity;
+        auto hash_value{std::hash<Key>{}(key)};
+        return static_cast<SizeType>(hash_value) % capacity;
     }
 };
 
-} // namespace _hashmap_impl
+} // namespace hashmap_impl
 
-using _hashmap_impl::HashFunction;
-using _hashmap_impl::LinkedList;
-using _hashmap_impl::ListNode;
+using hashmap_impl::HashFunction;
+using hashmap_impl::LinkedList;
+using hashmap_impl::ListNode;
 
 /**
  * @brief Template for hash map container.
@@ -207,10 +207,10 @@ using _hashmap_impl::ListNode;
  * map.get("apple"); // == 1
  * @endcode
  *
- * @tparam K Type of the key variables.
- * @tparam V Type of the value variables.
+ * @tparam Key Type of the key variables.
+ * @tparam Value Type of the value variables.
  */
-template <typename K, typename V>
+template <typename Key, typename Value>
 class HashMap
 {
   public:
@@ -218,15 +218,15 @@ class HashMap
      * @brief Type used for indexing and size definition.
      *
      */
-    typedef uint32_t size_type;
+    using size_type = uint32_t;
 
     /**
      * @brief Construct a new Hash Map object.
      *
      */
     HashMap()
-        : m_Size{0},
-          m_TableCapacity{2}, m_Table{new LinkedList<K, V>*[m_TableCapacity]}
+        : m_Size{0}, m_TableCapacity{2},
+          m_Table{new LinkedList<Key, Value>*[m_TableCapacity]}
     {
         initTable();
     }
@@ -241,6 +241,7 @@ class HashMap
     {
         for (size_type i{0}; i < m_TableCapacity; ++i)
         {
+            // Delete linked list at intex i
             delete m_Table[i];
         }
         delete[] m_Table;
@@ -252,14 +253,14 @@ class HashMap
      * @param key Key to store the value under.
      * @param value Value to be stored.
      */
-    void insert(const K& key, const V& value);
+    void insert(const Key& key, const Value& value);
 
     /**
      * @brief Remove key-value pair from the HashMap.
      *
      * @param key Key to remove.
      */
-    void remove(const K& key);
+    void remove(const Key& key);
 
     /**
      * @brief Get value stored under a key.
@@ -267,7 +268,7 @@ class HashMap
      * @param key Key to retrieve value for.
      * @return `V&` Reference to value under the key.
      */
-    V& get(const K& key);
+    Value& get(const Key& key);
 
     /**
      * @brief Check if HashMap includes a key.
@@ -276,7 +277,7 @@ class HashMap
      * @return `true` If hash map includes the key.
      * @return `false` If hash map does not include the key.
      */
-    bool includes(const K& key) const;
+    bool includes(const Key& key) const;
 
     /**
      * @brief Get number of items in the HashMap.
@@ -289,20 +290,20 @@ class HashMap
     }
 
   private:
-    _hashmap_impl::LinkedList<K, V>** m_Table;
-    const _hashmap_impl::HashFunction<K, size_type> m_HashFn{};
+    hashmap_impl::LinkedList<Key, Value>** m_Table;
+    const hashmap_impl::HashFunction<Key, size_type> m_HashFn{};
     size_type m_TableCapacity;
     size_type m_Size;
 
     void initTable();
     void resizeTable(size_type newTableCapacity);
-    size_type getKeyIndex(const K& key) const;
+    size_type getKeyIndex(const Key& key) const;
 };
 
 // ------ HashMap Implementation ----------------------
 
-template <typename K, typename V>
-void HashMap<K, V>::insert(const K& key, const V& value)
+template <typename Key, typename Value>
+void HashMap<Key, Value>::insert(const Key& key, const Value& value)
 {
     if (m_Size + 1 >= m_TableCapacity)
     {
@@ -313,11 +314,11 @@ void HashMap<K, V>::insert(const K& key, const V& value)
     ++m_Size;
 }
 
-template <typename K, typename V>
-void HashMap<K, V>::remove(const K& key)
+template <typename Key, typename Value>
+void HashMap<Key, Value>::remove(const Key& key)
 {
     size_type index{getKeyIndex(key)};
-    LinkedList<K, V>* list{m_Table[index]};
+    LinkedList<Key, Value>* list{m_Table[index]};
     if (!list->removeKey(key))
     {
         throw std::out_of_range("Key not found!");
@@ -325,12 +326,12 @@ void HashMap<K, V>::remove(const K& key)
     --m_Size;
 }
 
-template <typename K, typename V>
-V& HashMap<K, V>::get(const K& key)
+template <typename Key, typename Value>
+Value& HashMap<Key, Value>::get(const Key& key)
 {
     size_type index{getKeyIndex(key)};
-    LinkedList<K, V>* list{m_Table[index]};
-    ListNode<K, V>* node{list->find(key)};
+    LinkedList<Key, Value>* list{m_Table[index]};
+    ListNode<Key, Value>* node{list->find(key)};
     if (!node)
     {
         throw std::out_of_range("Key not found!");
@@ -338,38 +339,38 @@ V& HashMap<K, V>::get(const K& key)
     return node->getValue();
 }
 
-template <typename K, typename V>
-bool HashMap<K, V>::includes(const K& key) const
+template <typename Key, typename Value>
+bool HashMap<Key, Value>::includes(const Key& key) const
 {
     size_type index{getKeyIndex(key)};
-    LinkedList<K, V>* list{m_Table[index]};
-    ListNode<K, V>* node{list->find(key)};
+    LinkedList<Key, Value>* list{m_Table[index]};
+    ListNode<Key, Value>* node{list->find(key)};
     return node != nullptr;
 }
 
-template <typename K, typename V>
-void HashMap<K, V>::initTable()
+template <typename Key, typename Value>
+void HashMap<Key, Value>::initTable()
 {
     for (size_type i{0}; i < m_TableCapacity; ++i)
     {
-        m_Table[i] = new LinkedList<K, V>;
+        m_Table[i] = new LinkedList<Key, Value>;
     }
 }
 
-template <typename K, typename V>
-void HashMap<K, V>::resizeTable(size_type newTableCapacity)
+template <typename Key, typename Value>
+void HashMap<Key, Value>::resizeTable(size_type newTableCapacity)
 {
-    LinkedList<K, V>** oldTable = m_Table;
+    LinkedList<Key, Value>** oldTable = m_Table;
     size_type oldTableCapacity = m_TableCapacity;
 
-    m_Table = new LinkedList<K, V>*[newTableCapacity];
+    m_Table = new LinkedList<Key, Value>*[newTableCapacity];
     m_TableCapacity = newTableCapacity;
     m_Size = 0;
     initTable();
 
     for (size_type i{0}; i < oldTableCapacity; ++i)
     {
-        ListNode<K, V>* node = oldTable[i]->getRoot();
+        ListNode<Key, Value>* node = oldTable[i]->getRoot();
         while (node)
         {
             insert(node->getKey(), node->getValue());
@@ -379,38 +380,39 @@ void HashMap<K, V>::resizeTable(size_type newTableCapacity)
     delete[] oldTable;
 }
 
-template <typename K, typename V>
-typename HashMap<K, V>::size_type HashMap<K, V>::getKeyIndex(const K& key) const
+template <typename Key, typename Value>
+typename HashMap<Key, Value>::size_type HashMap<Key, Value>::getKeyIndex(
+    const Key& key) const
 {
     return m_HashFn(key, m_TableCapacity);
 }
 
 // ------ LinkedList Implementation ----------------------
 
-template <typename K, typename V>
-LinkedList<K, V>::~LinkedList()
+template <typename Key, typename Value>
+LinkedList<Key, Value>::~LinkedList()
 {
-    ListNode<K, V>* node = m_Root;
+    ListNode<Key, Value>* node = m_Root;
     while (node)
     {
-        ListNode<K, V>* prev = node;
+        ListNode<Key, Value>* prev = node;
         node = node->getNext();
         delete prev;
     }
 }
 
-template <typename K, typename V>
-void LinkedList<K, V>::insertKeyValue(const K& key, const V& value)
+template <typename Key, typename Value>
+void LinkedList<Key, Value>::insertKeyValue(const Key& key, const Value& value)
 {
-    ListNode<K, V>* node{m_Root};
-    ListNode<K, V>* newNode{new ListNode<K, V>(key, value)};
+    ListNode<Key, Value>* node{m_Root};
+    ListNode<Key, Value>* newNode{new ListNode<Key, Value>(key, value)};
     if (!node)
     {
         m_Root = newNode;
         return;
     }
 
-    ListNode<K, V>* prev{nullptr};
+    ListNode<Key, Value>* prev{nullptr};
     while (node && node->getKey() != key)
     {
         prev = node;
@@ -426,10 +428,10 @@ void LinkedList<K, V>::insertKeyValue(const K& key, const V& value)
     }
 }
 
-template <typename K, typename V>
-ListNode<K, V>* LinkedList<K, V>::find(const K& key)
+template <typename Key, typename Value>
+ListNode<Key, Value>* LinkedList<Key, Value>::find(const Key& key)
 {
-    ListNode<K, V>* node{m_Root};
+    ListNode<Key, Value>* node{m_Root};
     while (node && node->getKey() != key)
     {
         node = node->getNext();
@@ -437,11 +439,11 @@ ListNode<K, V>* LinkedList<K, V>::find(const K& key)
     return node;
 }
 
-template <typename K, typename V>
-bool LinkedList<K, V>::removeKey(const K& key)
+template <typename Key, typename Value>
+bool LinkedList<Key, Value>::removeKey(const Key& key)
 {
-    ListNode<K, V>* prev{nullptr};
-    ListNode<K, V>* node = m_Root;
+    ListNode<Key, Value>* prev{nullptr};
+    ListNode<Key, Value>* node = m_Root;
     while (node && node->getKey() != key)
     {
         prev = node;

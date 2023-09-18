@@ -1,7 +1,9 @@
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
+#include <initializer_list>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -34,7 +36,7 @@ class DynamicArray
      * @brief Type used for indexing and size definition.
      *
      */
-    typedef uint32_t size_type;
+    using size_type = uint32_t;
 
     /**
      * @brief Construct a new DynamicArray object.
@@ -45,10 +47,100 @@ class DynamicArray
     }
 
     /**
+     * @brief Construct a new DynamicArray object from initializer list.
+     *
+     * @param list Initializer list.
+     */
+    DynamicArray(std::initializer_list<T> list)
+        : m_Size{static_cast<size_type>(list.size())},
+          m_Capacity{static_cast<size_type>(list.size())},
+          m_Data{std::make_unique<T[]>(list.size())}
+    {
+        std::copy(list.begin(), list.end(), m_Data.get());
+    }
+
+    DynamicArray(const DynamicArray<T>& array)
+    {
+        *this = array;
+    }
+
+    DynamicArray<T>& operator=(const DynamicArray<T>& array)
+    {
+        m_Capacity = array.m_Capacity;
+        m_Size = array.m_Size;
+        m_Data = std::make_unique<T[]>(m_Size);
+        auto* p{array.m_Data.get()};
+        std::copy(p, p + array.m_Size, m_Data.get());
+        return *this;
+    }
+
+    DynamicArray(DynamicArray<T>&& array)
+    {
+        *this = std::move(array);
+    }
+
+    /**
      * @brief Destroy the DynamicArray object.
      *
      */
     ~DynamicArray() = default;
+
+    DynamicArray<T>& operator=(DynamicArray<T>&& array)
+    {
+        m_Capacity = array.m_Capacity;
+        m_Size = array.m_Size;
+        m_Data = std::move(array.m_Data);
+        array.m_Size = 0;
+        array.m_Capacity = 0;
+        return *this;
+    }
+
+    bool operator==(const DynamicArray<T>& other)
+    {
+        if (m_Size != other.m_Size)
+            return false;
+        for (int i{0}; i < m_Size; ++i)
+        {
+            if (get(i) != other.get(i))
+                return false;
+        }
+        return true;
+    }
+
+    bool operator!=(const DynamicArray<T>& other)
+    {
+        return !(*this == other);
+    }
+
+    /**
+     * @brief Return pointer to first element, for range loop.
+     *
+     * @return T* Pointer to the first element.
+     */
+    T* begin()
+    {
+        return m_Data.get();
+    }
+
+    const T* begin() const
+    {
+        return m_Data.get();
+    }
+
+    /**
+     * @brief Return pointer to one past last elemente, for range loop.
+     *
+     * @return T* Pointer to one past last element.
+     */
+    T* end()
+    {
+        return m_Data.get() + m_Size;
+    }
+
+    const T* end() const
+    {
+        return m_Data.get() + m_Size;
+    }
 
     /**
      * @brief Inserts element to the array.
@@ -195,8 +287,8 @@ void DynamicArray<T>::resize(size_type newCapacity)
 {
     std::unique_ptr<T[]> newData = std::make_unique<T[]>(newCapacity);
 
-    memcpy(newData.get(), m_Data.get(),
-           static_cast<std::size_t>(m_Size) * sizeof(T));
+    auto* p_data{m_Data.get()};
+    std::copy(p_data, p_data + m_Size, newData.get());
 
     m_Data = std::move(newData);
     m_Capacity = newCapacity;
